@@ -1,46 +1,38 @@
-from tkinter import Tk, BOTH, Canvas
+import ctypes
+import sys
+from graphics import Window, Line, Point
+from cell import Cell
 
-class Window:
-    def __init__(self, width, height):
-        # Create the root widget
-        self.__root = Tk()
+# Set DPI awareness (Windows only)
+if sys.platform == "win32":  # Check if the platform is Windows
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    except AttributeError:
+        print("DPI awareness setting is not supported on this system.")
+    except Exception as e:
+        print(f"Failed to set DPI awareness: {e}")
 
-        # Set the title of the window
-        self.__root.title("Tkinter Window")
-
-        # Create a canvas and save it as a data member
-        self.__canvas = Canvas(self.__root, width=width, height=height)
-        self.__canvas.pack(fill=BOTH, expand=True)
-
-        # Initialize the running state
-        self.__running = False
-
-        # Handle the "delete window" action
-        self.__root.protocol("WM_DELETE_WINDOW", self.close)
-
-    def redraw(self):
-        # Redraw the graphics in the window
-        self.__root.update_idletasks()
-        self.__root.update()
-
-    def wait_for_close(self):
-        # Set the running state to True
-        self.__running = True
-
-        # Keep redrawing while running
-        while self.__running:
-            self.redraw()
-
-    def close(self):
-        # Set the running state to False
-        self.__running = False
-
-# Main function
 def main():
     # Create a window instance
-    win = Window(800, 600)
-    # Wait for the window to close
+    win = Window(1600, 1200)  # Use a larger resolution
+
+    c = Cell(win)
+    c.has_left_wall = False
+    c.draw(50, 50, 100, 100)
+
+    c = Cell(win)
+    c.has_right_wall = False
+    c.draw(125, 125, 200, 200)
+
+    c = Cell(win)
+    c.has_bottom_wall = False
+    c.draw(225, 225, 250, 250)
+
+    c = Cell(win)
+    c.has_top_wall = False
+    c.draw(300, 300, 500, 500)
     win.wait_for_close()
 
 if __name__ == "__main__":
     main()
+
